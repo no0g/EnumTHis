@@ -1,6 +1,7 @@
 #!/bin/env python3
 import re, uuid
 import psutil
+import os
 
 cyan  = "\033[0;96m"
 green   = "\033[0;92m"
@@ -27,7 +28,11 @@ def getIPAddress():
     interface = list(result.keys())
     ip = []
     for i in interface:
-        ip.append(green+result[i][0].address)
+        if os.name == 'nt':
+            ip.append(green+result[i][1].address)
+        else:
+            ip.append(green+result[i][0].address)
+
     
     all = ""
     for i,j in zip(interface,ip):
