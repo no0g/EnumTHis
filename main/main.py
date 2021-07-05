@@ -3,6 +3,7 @@ import socket
 import sys
 from network import *
 from files import * 
+from usage import *
 host = '0.0.0.0'
 port = 9001
 
@@ -33,7 +34,7 @@ def banner(con):
 
 def menu(con):
     banner(con)
-    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n'
+    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n'
     con.sendall(mainMenu)
     con.sendall(b'\nSpecify Option: ')
     opt = con.recv(1024)
@@ -49,6 +50,8 @@ def menu(con):
                 NetworkMenu(con)
             elif(opt == 5):
                 filesMenu(con)
+            elif(opt == 6):
+                UsageMenu(con)
             else :
                 con.sendall(b'lol\n')
         except ValueError:
