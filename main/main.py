@@ -46,7 +46,7 @@ def menu(con):
             if(opt == 1):
                 con.sendall(b'kerjaan willi')
             elif(opt == 4):
-                networkMenu(con)
+                NetworkMenu(con)
             elif(opt == 5):
                 filesMenu(con)
             else :

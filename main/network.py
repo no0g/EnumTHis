@@ -1,9 +1,6 @@
 #!/bin/env python3
-
-import netifaces
-import pickle
-import json
-from socket import gethostname
+import re, uuid
+import psutil
 
 cyan  = "\033[0;96m"
 green   = "\033[0;92m"
@@ -14,78 +11,60 @@ yellow  = "\033[0;33m"
 magenta = "\033[0;35m"
 Color_Off='\033[0m'
 
-def getInterfaces():
-    interfaces = netifaces.interfaces()
-    interface_str = ", ".join(interfaces)
-    return yellow+interface_str+Color_Off
+def getNetInterface():
+    result = psutil.net_if_addrs()
+    netInterface = ""
+    result = list(result.keys())
+    for i in result:
+        netInterface+= blue
+        netInterface+= i
+        netInterface+= ", "
+        netInterface+=Color_Off
+    return netInterface
 
-def getIPaddress(con):
+def getIPAddress():
+    result = psutil.net_if_addrs()
+    interface = list(result.keys())
+    ip = []
+    for i in interface:
+        ip.append(green+result[i][0].address)
     
-    interfaces = getInterfaces()
-    interfaces = interfaces+"\n\n"
-    con.sendall(str(interfaces+"\nSpecify Interface: ").encode())
-    #con.sendall(b"\nSpecify Interface: ")
-    optInt = con.recv(1024)
-    try:
-        optInt = str(optInt.decode().strip())
-        address = netifaces.ifaddresses(optInt)
-        address = address[netifaces.AF_INET]
-        address = address[0]
-        address = blue+"ip: "+green+address["addr"]+blue+", netmask: "+green+address["addr"]+Color_Off+"\n\n"
-        con.sendall(address.encode())
-    except ValueError:
-        con.sendall(b'Please only send valid input')
-    except KeyboardInterrupt:
-        sys.exit(0)
-    except:
-        con.sendall(b'Could Not Retrieve Data')
+    all = ""
+    for i,j in zip(interface,ip):
+        all+= magenta
+        all += i+ " " + j + "\n"
+        all+=Color_Off
+    return all
+        
 
-def getMacAddress(con):
-    interfaces = getInterfaces()
-    interfaces = interfaces+"\n\n"
-    con.sendall(str(interfaces+"\nSpecify Interface: ").encode())
-    #con.sendall(b"\nSpecify Interface: ")
-    optInt = con.recv(1024)
-    try:
-        optInt = str(optInt.decode().strip())
-        address = netifaces.ifaddresses(optInt)
-        address = address[netifaces.AF_LINK]
-        address = address[0]
-        address = blue+"MAC Address: "+green+address["addr"]+Color_Off+"\n\n"
-        con.sendall(address.encode())
-    except ValueError:
-        con.sendall(b'Please only send valid input')
-    except KeyboardInterrupt:
-        sys.exit(0)
-    except :
-        con.sendall(b'Could Not Retrieve Data')
+def getMacAddress():
+    mac = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
+    return cyan+mac+Color_Off
 
-def networkMenu(con):
-    menu = b'1. Get All Network Interfaces\n2. Get IP Address\n3. Get Mac Address\n4. Get Hostname'
+def NetworkMenu(con):
+    menu = b"\n1. Get Network Interface\n2. Get IP address\n3. Get Mac Address\n"
     con.sendall(menu)
     con.sendall(b"\nSpecify Options: ")
     opt = con.recv(1024)
     try:
         opt = opt.decode()
         opt = int(opt)
-        if( opt == 1):
-            #con.sendall(b'Listing Out Network Interfaces:\n')
-            interfaces = getInterfaces()
-            interfaces = interfaces+"\n\n"
-            con.sendall(str("Listing Out Network Interfaces:\n"+interfaces).encode())
-        elif (opt == 2):
-            #con.sendall(b'Retrieving IP address\n')
-            getIPaddress(con)
-        elif (opt == 3): 
-            #con.sendall(b'Get Mac Address from Interface\n')
-            getMacAddress(con)
-        elif (opt == 4):
-            #con.sendall(b'Get Hostname\n')
-            hostname = gethostname()
-            hostname = str("\nHostname:"+red+hostname+Color_Off+"\n").encode()
-            con.sendall(hostname)
+        if(opt == 1):
+            con.sendall(str(getNetInterface()).encode())
+        elif( opt == 2):
+            #con.sendall(b'\nListing file ready')
+            con.sendall(str(getIPAddress()).encode())
+        elif(opt == 3):
+            con.sendall(str(getMacAddress()).encode())
     except ValueError:
-        con.sendall(b'Please only send integer value representing each option\n')
+        con.sendall(b"\nPlese only send integer value representing each option\n")
     except KeyboardInterrupt:
         sys.exit(0)
 
+if __name__ == "__main__":
+    a = getNetInterface()
+    b = getIPAddress()
+    print(a)
+    print(b)
+    mac = getMacAddress()
+    print(mac)
