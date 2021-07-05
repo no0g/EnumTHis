@@ -6,11 +6,20 @@ target = input("Enter your target IP: ")
 r = remote(target.strip(),9001)
 try:
     while True:
-        data = r.recv(4092).decode()
-        print(data)
+        
+        while True:
+            data = r.recv(1024,0.000001)
+            print(data.decode())
+            if not data:
+                break
+        
         opt = input()
         opt = opt.encode()
-        r.sendline(opt)
+        if opt != b'\n':
+            r.sendline(opt)
+        else:
+            print('Do not send empty input!')
+
 except KeyboardInterrupt:
     r.close()
     print("Connection Aborted")
