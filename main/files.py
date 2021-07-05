@@ -24,6 +24,8 @@ def find_files(con):
                 result.append(os.path.join(root,optFile))
         message = blue+"\nFinding Files . . .\n"
         out = yellow+"\n".join(result)
+        if not result:
+            con.sendall(str(red+"No file found").encode())
         con.sendall(str(message+out+"\n").encode())
     except ValueError:
         con.sendall(b"\nPlease send valid input")
@@ -57,8 +59,44 @@ def listDir(con):
     except:
         con.sendall(b'Could Not Retrieve Data')
 
+def removeFile(con):
+    con.sendall(b'\nSpecify file with path: ')
+    optDir = con.recv(2048)
+    try:
+        optDir = str(optDir.decode().strip())
+        if os.path.exists(optDir):
+            os.remove(optDir)
+            con.sendall(b"File removed")
+        else:
+            con.sendall(b"The file does not exist")
+    except ValueError:
+        con.sendall(b'Please only send valid input')
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except:
+        con.sendall(b'Could Not Retrieve Data')
+
+def readFile(con):
+    con.sendall(b'\nSpecify file with path: ')
+    optDir = con.recv(2048)
+    try:
+        optDir = str(optDir.decode().strip())
+        if os.path.exists(optDir):
+            f = open(optDir,'r')
+            content = red+"\n+++++++++++"+optDir+"++++++++++++++\n"
+            content+= green+"  "+f.read()
+            content+= red+"\n+++++++++++++++++++++++++++++++++++\n"+Color_Off
+            con.sendall(content.encode())
+        else:
+            con.sendall(b"The file does not exist")
+    except ValueError:
+        con.sendall(b'Please only send valid input')
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except:
+        con.sendall(b'Could Not Retrieve Data')
 def filesMenu(con):
-    menu = b"\n1. Current Directory\n2. Directory Listing\n3. Find Files in Directory\n"
+    menu = b"\n1. Current Directory\n2. Directory Listing\n3. Find Files in Directory\n4. Remove File\n5. Read File\n"
     con.sendall(menu)
     con.sendall(b"\nSpecify Options: ")
     opt = con.recv(1024)
@@ -72,6 +110,10 @@ def filesMenu(con):
             listDir(con)
         elif(opt == 3):
             find_files(con)
+        elif(opt == 4):
+            removeFile(con)
+        elif(opt == 5):
+            readFile(con)
     except ValueError:
         con.sendall(b"\nPlese only send integer value representing each option\n")
     except KeyboardInterrupt:
