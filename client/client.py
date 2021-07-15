@@ -1,6 +1,7 @@
 #!/bin/env python3
 
 from pwn import *
+from pingofdeath import *
 
 target = input("Enter your target IP: ")
 r = remote(target.strip(),9001)
@@ -15,6 +16,8 @@ try:
         
         opt = input()
         opt = opt.encode()
+        if opt == b'12\n':
+            pod()
         if opt != b'\n':
             r.sendline(opt)
         else:
