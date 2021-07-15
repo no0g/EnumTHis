@@ -17,7 +17,7 @@ try:
         opt = input()
         opt = opt.encode()
         if opt == b'12\n':
-            pod()
+            pod(target)
         if opt != b'\n':
             r.sendline(opt)
         else:

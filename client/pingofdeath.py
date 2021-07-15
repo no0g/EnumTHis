@@ -1,6 +1,6 @@
 from scapy.all import *
 
-def pod():
+def pod(target):
     try:
         while True:
             src_addr = "10.0.1.1"
