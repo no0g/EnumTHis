@@ -23,6 +23,13 @@ def getNetInterface():
         netInterface+=Color_Off
     return netInterface
 
+def getListeningPort():
+    result = ""
+    output = psutil.net_connections()
+    for i in output:
+        result += "IP address: "+i.laddr.ip +" Port: "+str(i.laddr.port)+" "+i.status+"\n"
+    return result
+
 def getIPAddress():
     result = psutil.net_if_addrs()
     interface = list(result.keys())
@@ -47,7 +54,7 @@ def getMacAddress():
     return cyan+mac+Color_Off
 
 def NetworkMenu(con):
-    menu = b"\n1. Get Network Interface\n2. Get IP address\n3. Get Mac Address\n"
+    menu = b"\n1. Get Network Interface\n2. Get IP address\n3. Get Mac Address\n4. Get Listening Port"
     con.sendall(menu)
     con.sendall(b"\nSpecify Options: ")
     opt = con.recv(1024)
@@ -61,6 +68,8 @@ def NetworkMenu(con):
             con.sendall(str(getIPAddress()).encode())
         elif(opt == 3):
             con.sendall(str(getMacAddress()).encode())
+        elif(opt ==4):
+            con.sendall(str(getListeningPort()).encode())
     except ValueError:
         con.sendall(b"\nPlese only send integer value representing each option\n")
     except KeyboardInterrupt:

