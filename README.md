@@ -6,10 +6,10 @@ Built to fulfill the requirement of MASP module of Asia Pacific University
 
 # Installation
 ## Client-side
-- Install `pwntools` and `scapy`
+- Install `pwntools` and `scapy`   
 Use the command `pip3 install scapy pwn` to install both libraries.
 ## Server-side/victim (If needed)
-- Install `cryptography` and `psutil`
+- Install `cryptography` and `psutil`   
 Use the command `pip3 install psutil cryptography` to install both libraries.
 
 # Usage
